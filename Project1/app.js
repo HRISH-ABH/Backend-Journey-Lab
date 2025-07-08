@@ -1,51 +1,32 @@
 const express=require('express');
+const connectToDb=require('./src/db/db')
+const dotenv=require('dotenv');
+dotenv.config();
+// server will connect to DB in this file only
+connectToDb(); //database connection
 
 const app=express();
-app.use(express.json());  //to not get undefiend in req.body
+app.use(express.json());
 
-const notes=[];
+
 app.get('/',(req,res)=>{
-    res.send("Hello Cohort!!")
-});
+    res.send("Hello Welcome to Notes App")
+})
 
 
 app.post('/notes',(req,res)=>{
-console.log(req.body);
-notes.push(req.body);
-res.send(
-    "Data recieved :" +
-      res.json({ message: "notes added successfully", length:notes.length,notes: notes })
-  ); 
-});
-
-
-app.get('/notes',(req,res)=>{
-res.json(notes);
-})
-
-
-app.delete('/notes/:index',(req,res)=>{
-
-    const index=req.params.index;
-
-    delete notes[index];
-    res.json({
-        message:"The notea at index :"+index+" was deleted successfully!!",
-    })
-})
-
-
-app.patch('/notes/:idx',(req,res)=>{
-    const index=req.params.idx;
-    const {title}=req.body;
-
-    notes[index]['title']=title;
+    const {title,desc}=req.body;
+    console.log(title,desc);
 
     res.json({
-        message:"the title of note at index :"+index+" was changed",
+        message:"Data recieved",
+        title:title,
+        desc:desc
     })
+    
 })
 app.listen(3000,()=>{
-    console.log("Server is running at 3000 port");
+    console.log("Server is running on 3000");
+    
     
 })
